@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:text="Inven - Stock Dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp"/>
+
+    <Button
+        android:id="@+id/createOrderButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create New Order"/>
+
+    <Button
+        android:id="@+id/pendingBillsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Pending Bills"/>
+
+    <Button
+        android:id="@+id/ordersButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Orders"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/variantsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/scanButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan QR to Sell"/>
+
+</LinearLayout>
