@@ -45,3 +45,31 @@ data class PendingBillItemCreate(
 data class PendingBillCreate(
     val items: List<PendingBillItemCreate>
 )
+
+data class OrderItem(
+    val id: Int,
+    val variant_id: Int,
+    val quantity: Int,
+    val variant: Variant
+)
+
+data class Order(
+    val id: Int,
+    val status: String,
+    val created_at: String,
+    val items: List<OrderItem>
+)
+
+data class PendingBillItem(
+    val id: Int,
+    val variant_id: Int,
+    val quantity: Int,
+    val variant: Variant
+)
+
+data class PendingBill(
+    val id: Int,
+    val status: String,
+    val created_at: String,
+    val items: List<PendingBillItem>
+)

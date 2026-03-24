@@ -36,7 +36,8 @@ class OrdersActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         val orders = response.body() ?: emptyList()
-                        recyclerView.adapter = OrdersAdapter(orders) { orderId ->
+                        val pendingOrders = orders.filter { it.status == "pending" }
+                        recyclerView.adapter = OrdersAdapter(pendingOrders) { orderId ->
                             activateOrder(orderId)
                         }
                     }
@@ -71,7 +72,7 @@ class OrdersActivity : AppCompatActivity() {
 }
 
 class OrdersAdapter(
-    private val orders: List<Any>,
+    private val orders: List<Order>,
     private val onActivate: (Int) -> Unit
 ) : RecyclerView.Adapter<OrdersAdapter.ViewHolder>() {
 
@@ -88,10 +89,11 @@ class OrdersAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.orderId.text = "Order #${position + 1}"
-        holder.orderStatus.text = "Tap activate to update stock"
+        val order = orders[position]
+        holder.orderId.text = "Order #${order.id}"
+        holder.orderStatus.text = "Items: ${order.items.size} | Status: ${order.status}"
         holder.activateButton.setOnClickListener {
-            onActivate(position + 1)
+            onActivate(order.id)
         }
     }
 

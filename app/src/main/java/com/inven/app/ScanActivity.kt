@@ -1,11 +1,15 @@
 package com.inven.app
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -23,6 +27,7 @@ class ScanActivity : AppCompatActivity() {
 
     private val billItems = mutableListOf<PendingBillItemCreate>()
     private var currentVariant: Variant? = null
+    private val CAMERA_PERMISSION_CODE = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +40,13 @@ class ScanActivity : AppCompatActivity() {
         barcodeView = DecoratedBarcodeView(this)
         findViewById<android.widget.FrameLayout>(R.id.scannerContainer).addView(barcodeView)
 
-        barcodeView.decodeContinuous(object : BarcodeCallback {
-            override fun barcodeResult(result: BarcodeResult) {
-                barcodeView.pause()
-                lookupVariant(result.text)
-            }
-        })
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+        } else {
+            startScanner()
+        }
 
         addToBillButton.setOnClickListener {
             currentVariant?.let { variant ->
@@ -56,6 +62,27 @@ class ScanActivity : AppCompatActivity() {
         confirmBillButton.setOnClickListener {
             createPendingBill()
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startScanner()
+            } else {
+                Toast.makeText(this, "Camera permission required for scanning", Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
+    }
+
+    private fun startScanner() {
+        barcodeView.decodeContinuous(object : BarcodeCallback {
+            override fun barcodeResult(result: BarcodeResult) {
+                barcodeView.pause()
+                lookupVariant(result.text)
+            }
+        })
     }
 
     private fun lookupVariant(qrCode: String) {

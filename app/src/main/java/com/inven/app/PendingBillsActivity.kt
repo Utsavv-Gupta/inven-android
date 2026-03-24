@@ -71,7 +71,7 @@ class PendingBillsActivity : AppCompatActivity() {
 }
 
 class PendingBillAdapter(
-    private val bills: List<Any>,
+    private val bills: List<PendingBill>,
     private val onApprove: (Int) -> Unit
 ) : RecyclerView.Adapter<PendingBillAdapter.ViewHolder>() {
 
@@ -88,10 +88,13 @@ class PendingBillAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.billId.text = "Bill #${position + 1}"
-        holder.billItems.text = "Tap approve to process"
+        val bill = bills[position]
+        holder.billId.text = "Bill #${bill.id}"
+        holder.billItems.text = bill.items.joinToString(", ") {
+            "${it.variant.brand.name} ${it.variant.size_label} x${it.quantity}"
+        }
         holder.approveButton.setOnClickListener {
-            onApprove(position + 1)
+            onApprove(bill.id)
         }
     }
 

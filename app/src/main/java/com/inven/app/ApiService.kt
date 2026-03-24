@@ -36,7 +36,7 @@ interface ApiService {
     suspend fun approvePendingBill(@Path("bill_id") billId: Int): Response<Any>
 
     @GET("pending-bills")
-    suspend fun getPendingBills(): Response<List<Any>>
+    suspend fun getPendingBills(): Response<List<PendingBill>>
 
     @GET("reports/sales")
     suspend fun getSalesReport(
@@ -45,5 +45,5 @@ interface ApiService {
     ): Response<Any>
 
     @GET("orders")
-    suspend fun getOrders(): Response<List<Any>>
+    suspend fun getOrders(): Response<List<Order>>
 }
